@@ -1,0 +1,333 @@
+hasta ahroa tengo este codigo:
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BRAILL-IA | Innovación para la Inclusión</title>
+  <style>
+    /* Variables de color */
+    :root {
+      --bg: #ffffff;
+      --text: #000000;
+      --accent: #40E0D0; /* Turquesa / verde agua */
+      --header-bg: #000000;
+      --header-border: #ffffff;
+      --corner-color: #40E0D0;
+    }
+
+    .dark-mode {
+      --bg: #000000;
+      --text: #ffffff;
+      --accent: #DA70D6; /* Violeta */
+      --header-bg: #000000;
+      --header-border: #ffffff;
+      --corner-color: #DA70D6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: background-color 0.4s, color 0.4s;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Esquinas estilo cámara */
+    .corner {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      border-color: var(--corner-color);
+      border-style: solid;
+      pointer-events: none;
+      z-index: 2000; /* 🔥 más alto que el header */
+      filter: drop-shadow(0 0 6px var(--corner-color)); /* brillo suave */
+    }
+
+    .corner-tl { top: 90px; left: 20px; border-width: 3px 0 0 3px; }
+    .corner-tr { top: 90px; right: 20px; border-width: 3px 3px 0 0; }
+    .corner-bl { bottom: 20px; left: 20px; border-width: 0 0 3px 3px; }
+    .corner-br { bottom: 20px; right: 20px; border-width: 0 3px 3px 0; }
+
+    /* Header fijo */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--header-bg);
+      padding: 1rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      border-bottom: 1px solid var(--header-border);
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: bold;
+      font-size: 1.4rem;
+      color: white;
+    }
+
+    header nav a {
+      margin-left: 1.5rem;
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+
+    header nav a:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* Contenedor principal */
+    main {
+      padding-top: 100px;
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+
+    /* Pantalla inicial */
+    .intro {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: calc(100vh - 100px);
+      padding: 0 20px;
+      opacity: 1;
+      transition: opacity 0.6s ease;
+    }
+
+    .intro.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .intro h1 {
+      font-size: 2.8rem;
+      margin-bottom: 2.5rem;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .cards {
+      display: flex;
+      gap: 25px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .card {
+      background: transparent;
+      border: 2px solid var(--accent);
+      border-radius: 12px;
+      padding: 20px;
+      width: 220px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      padding: 12px 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 30px;
+      margin: 30px;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(64, 224, 208, 0.4);
+    }
+
+    .dark-mode .btn:hover {
+      box-shadow: 0 6px 15px rgba(218, 112, 214, 0.4);
+    }
+
+    /* Contenido principal */
+    .content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .content.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .download-btn {
+      display: block;
+      margin: 0 auto 2.5rem;
+      width: fit-content;
+      text-align: center;
+      margin-top: 60px;
+    }
+
+    .content h2 {
+      font-size: 2rem;
+      margin: 2rem 0 1.2rem;
+      color: var(--accent);
+    }
+
+    .content p {
+      margin-bottom: 1.2rem;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+
+    /* Scroll suave */
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Esquinas estilo cámara -->
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <!-- Header fijo -->
+  <header>
+    <div class="logo">
+      <span>🧠</span>
+      <span>BRAILL-IA</span>
+    </div>
+    <nav>
+      <a href="#sobre-nosotros">Sobre nosotros</a>
+      <a href="#objetivo">Objetivo</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Pantalla inicial -->
+    <div class="intro" id="intro">
+      <h1>BRAILL-IA</h1>
+      <div class="cards">
+        <div class="card"><h2>¿De qué trata?</h2><br><small>Traducción IA de Braille a texto</small></div>
+        <div class="card"><h2>¿A quiénes va dirigido?</h2><br><small>Nuestro proyecto va dirigido a personas con discapacidad visual.</small></div>
+        <div class="card"><h2>¿Es gratis?</h2><br><small>100% gratuito y de código abierto</small></div>
+      </div>
+      <button class="btn" id="btn-saber-mas">Saber más y APP...</button>
+    </div>
+
+    <!-- Contenido principal (oculto al inicio) -->
+    <div class="content" id="content">
+
+      <img src="braille.jpg" alt="braille" style="width:100%; border-radius:12px; margin-bottom:20px; margin: 20px;"/>
+
+      <a href="BRAILL-IA.apk" download class="btn download-btn">📥 Descargar APP</a>
+
+      <h2>Proyecto BRAILL-IA</h2>
+      <p>
+        Se nos ha propuesto desde el aula desarrollar un proyecto con enfoque en <strong>Innovación Tecnológica</strong>, 
+        y es por eso que presentamos <strong>“BRAILL-IA”</strong>. Este proyecto está dedicado exclusivamente a la 
+        inclusión de personas con deficiencias visuales, abordando los desafíos asociados mediante un enfoque integral 
+        que combina inteligencia artificial, accesibilidad y sostenibilidad.
+      </p>
+      <p>
+        Nuestra solución consiste en crear programas de inteligencia artificial capaces de traducir texto en Braille 
+        a cualquier idioma de forma eficiente y precisa. Estas IA reconocen los patrones del sistema Braille, 
+        interpretan su contenido y lo convierten en texto legible en el idioma deseado, de manera rápida y accesible.
+      </p>
+      <p>
+        Además, estamos desarrollando una <strong>impresora de Braille de bajo costo</strong> utilizando Arduino, 
+        para que las personas puedan imprimir sus propios textos en Braille desde casa. Todo el software será
+        gratuito, de fácil manejo y compatible con dispositivos comunes.
+      </p>
+      <p>
+        Nuestro objetivo es generar un cambio significativo, inclusivo y sostenible, alineado con los principios 
+        del desarrollo sustentable y los derechos humanos.
+      </p>
+
+      <!-- Aquí puedes añadir más secciones, imágenes, etc. -->
+    </div>
+  </main>
+
+  <script>
+  // Bloquear scroll al inicio
+  document.body.style.overflow = 'hidden';
+
+  // Aplicar modo oscuro si estaba guardado
+  if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+  }
+
+  const intro = document.getElementById('intro');
+  const content = document.getElementById('content');
+
+  // Escuchar clic en el botón "Saber más"
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.btn') && e.target.id === 'btn-saber-mas') {
+
+      // Fade out con transición
+      intro.classList.add('hidden');
+
+      // Cuando termina la animación de fade, eliminarlo del flujo
+      intro.addEventListener('transitionend', () => {
+        intro.remove(); // 🔥 Elimina el elemento del DOM totalmente
+        document.body.style.overflow = 'auto'; // vuelve a habilitar el scroll
+        content.classList.add('visible');
+      }, { once: true }); // se ejecuta una sola vez
+    }
+  });
+
+  // --- BOTÓN DE MODO OSCURO ---
+  const darkModeToggle = document.createElement('button');
+  darkModeToggle.textContent = '🌓';
+  darkModeToggle.style.position = 'fixed';
+  darkModeToggle.style.bottom = '50px';
+  darkModeToggle.style.right = '50px';
+  darkModeToggle.style.background = 'var(--accent)';
+  darkModeToggle.style.border = 'none';
+  darkModeToggle.style.width = '50px';
+  darkModeToggle.style.height = '50px';
+  darkModeToggle.style.borderRadius = '50%';
+  darkModeToggle.style.cursor = 'pointer';
+  document.body.appendChild(darkModeToggle);
+
+  darkModeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('darkMode', isDark);
+  });
+</script>
+
+
+</body>
+</html>
